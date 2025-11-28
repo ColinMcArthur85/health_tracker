@@ -76,6 +76,11 @@ export async function POST(req: Request) {
   try {
     const { message } = await req.json();
 
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("Missing OPENAI_API_KEY");
+      return NextResponse.json({ error: "OpenAI API Key not configured" }, { status: 500 });
+    }
+
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
