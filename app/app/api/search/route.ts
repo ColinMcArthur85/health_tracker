@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
-import db from '@/lib/db';
-import { getUTCMidnight } from '@/lib/dateUtils';
+import { NextResponse } from "next/server";
+import db from "@/lib/db";
+import { getUTCMidnight } from "@/lib/dateUtils";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const keyword = searchParams.get('q')?.trim() || '';
-    const start = searchParams.get('start');
-    const end = searchParams.get('end');
-    const type = searchParams.get('type');
-    const intensity = searchParams.get('intensity');
+    const keyword = searchParams.get("q")?.trim() || "";
+    const start = searchParams.get("start");
+    const end = searchParams.get("end");
+    const type = searchParams.get("type");
+    const intensity = searchParams.get("intensity");
 
     const startDate = start ? getUTCMidnight(start) : undefined;
     const endDate = end ? getUTCMidnight(end) : undefined;
@@ -21,14 +21,7 @@ export async function GET(req: Request) {
         ...(intensity ? { intensity } : {}),
         ...(keyword
           ? {
-              OR: [
-                { name: { contains: keyword, mode: 'insensitive' } },
-                { type: { contains: keyword, mode: 'insensitive' } },
-                { instructor: { contains: keyword, mode: 'insensitive' } },
-                { platform: { contains: keyword, mode: 'insensitive' } },
-                { focusArea: { contains: keyword, mode: 'insensitive' } },
-                { notes: { contains: keyword, mode: 'insensitive' } },
-              ],
+              OR: [{ name: { contains: keyword } }, { type: { contains: keyword } }, { instructor: { contains: keyword } }, { platform: { contains: keyword } }, { focusArea: { contains: keyword } }, { notes: { contains: keyword } }],
             }
           : {}),
         ...(startDate || endDate
@@ -46,7 +39,7 @@ export async function GET(req: Request) {
         dailyLog: true,
       },
       orderBy: {
-        dailyLog: { date: 'desc' },
+        dailyLog: { date: "desc" },
       },
       take: 100,
     });
@@ -62,7 +55,7 @@ export async function GET(req: Request) {
       workouts,
     });
   } catch (error) {
-    console.error('Search API error:', error);
-    return NextResponse.json({ error: 'Failed to run search' }, { status: 500 });
+    console.error("Search API error:", error);
+    return NextResponse.json({ error: "Failed to run search" }, { status: 500 });
   }
 }

@@ -1,23 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
-import { format } from 'date-fns';
-import { Activity, TrendingUp, Flame, Moon, Droplets } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { format } from "date-fns";
+import { Activity, TrendingUp, Flame, Moon, Droplets } from "lucide-react";
 
 interface AnalyticsData {
   dailyStats: Array<{
@@ -42,7 +28,7 @@ interface AnalyticsData {
   streak: number;
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
 
 export default function AnalyticsCharts() {
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -60,7 +46,7 @@ export default function AnalyticsCharts() {
       const analyticsData = await res.json();
       setData(analyticsData);
     } catch (error) {
-      console.error('Error fetching analytics:', error);
+      console.error("Error fetching analytics:", error);
     } finally {
       setLoading(false);
     }
@@ -75,11 +61,7 @@ export default function AnalyticsCharts() {
   }
 
   if (!data) {
-    return (
-      <div className="text-center text-slate-400 py-12">
-        Failed to load analytics data
-      </div>
-    );
+    return <div className="text-center text-slate-400 py-12">Failed to load analytics data</div>;
   }
 
   const workoutTypeData = Object.entries(data.workoutTypes).map(([name, value]) => ({
@@ -87,8 +69,8 @@ export default function AnalyticsCharts() {
     value,
   }));
 
-  const dailyChartData = data.dailyStats.map(stat => ({
-    date: format(new Date(stat.date), 'MMM d'),
+  const dailyChartData = data.dailyStats.map((stat) => ({
+    date: format(new Date(stat.date), "MMM d"),
     workouts: stat.workoutCount,
     duration: stat.totalDuration,
     calories: stat.calories,
@@ -101,16 +83,8 @@ export default function AnalyticsCharts() {
     <div className="space-y-6">
       {/* Time Range Selector */}
       <div className="flex gap-2">
-        {[7, 14, 30, 90].map(d => (
-          <button
-            key={d}
-            onClick={() => setDays(d)}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              days === d
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-            }`}
-          >
+        {[7, 14, 30, 90].map((d) => (
+          <button key={d} onClick={() => setDays(d)} className={`px-4 py-2 rounded-lg transition-colors ${days === d ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}>
             {d} days
           </button>
         ))}
@@ -147,9 +121,7 @@ export default function AnalyticsCharts() {
             <Moon className="text-purple-400" size={20} />
             <p className="text-sm text-slate-400">Avg Sleep</p>
           </div>
-          <p className="text-2xl font-bold">
-            {data.averages.sleep ? `${data.averages.sleep}h` : '-'}
-          </p>
+          <p className="text-2xl font-bold">{data.averages.sleep ? `${data.averages.sleep}h` : "-"}</p>
         </div>
       </div>
 
@@ -163,9 +135,9 @@ export default function AnalyticsCharts() {
             <YAxis stroke="#94a3b8" />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1e293b',
-                border: '1px solid #334155',
-                borderRadius: '8px',
+                backgroundColor: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: "8px",
               }}
             />
             <Legend />
@@ -185,28 +157,14 @@ export default function AnalyticsCharts() {
             <YAxis stroke="#94a3b8" />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1e293b',
-                border: '1px solid #334155',
-                borderRadius: '8px',
+                backgroundColor: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: "8px",
               }}
             />
             <Legend />
-            <Line
-              type="monotone"
-              dataKey="calories"
-              stroke="#f59e0b"
-              name="Calories"
-              strokeWidth={2}
-              dot={{ r: 3 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="protein"
-              stroke="#10b981"
-              name="Protein (g)"
-              strokeWidth={2}
-              dot={{ r: 3 }}
-            />
+            <Line type="monotone" dataKey="calories" stroke="#f59e0b" name="Calories" strokeWidth={2} dot={{ r: 3 }} />
+            <Line type="monotone" dataKey="protein" stroke="#10b981" name="Protein (g)" strokeWidth={2} dot={{ r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -217,25 +175,16 @@ export default function AnalyticsCharts() {
           <h3 className="text-lg font-semibold mb-4">Workout Types</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie
-                data={workoutTypeData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
+              <Pie data={workoutTypeData} cx="50%" cy="50%" labelLine={false} label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`} outerRadius={80} fill="#8884d8" dataKey="value">
                 {workoutTypeData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: '1px solid #334155',
-                  borderRadius: '8px',
+                  backgroundColor: "#1e293b",
+                  border: "1px solid #334155",
+                  borderRadius: "8px",
                 }}
               />
             </PieChart>
@@ -253,30 +202,14 @@ export default function AnalyticsCharts() {
               <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: '1px solid #334155',
-                  borderRadius: '8px',
+                  backgroundColor: "#1e293b",
+                  border: "1px solid #334155",
+                  borderRadius: "8px",
                 }}
               />
               <Legend />
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="sleep"
-                stroke="#8b5cf6"
-                name="Sleep (hrs)"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="weight"
-                stroke="#ec4899"
-                name="Weight (lbs)"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-              />
+              <Line yAxisId="left" type="monotone" dataKey="sleep" stroke="#8b5cf6" name="Sleep (hrs)" strokeWidth={2} dot={{ r: 3 }} />
+              <Line yAxisId="right" type="monotone" dataKey="weight" stroke="#ec4899" name="Weight (lbs)" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
