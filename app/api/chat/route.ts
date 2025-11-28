@@ -163,7 +163,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ response: "I'm not sure how to handle that yet, but I understood it." });
 
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    console.error("Chat API Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
