@@ -3,9 +3,7 @@ import OpenAI from 'openai';
 import db from '@/lib/db';
 import { format } from 'date-fns';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+
 
 const SYSTEM_PROMPT = `
 You are a helpful Health Coach and Logger. You have access to a database of the user's health logs.
@@ -77,6 +75,10 @@ Example Response:
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
