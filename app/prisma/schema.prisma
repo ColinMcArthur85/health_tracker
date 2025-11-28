@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model DailyLog {
+  id        String   @id @default(uuid())
+  date      DateTime @unique // YYYY-MM-DDT00:00:00.000Z
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Summary stats (optional, can be calculated but good for caching)
+  rating    Float?
+
+  // Relations
+  workouts      Workout[]
+  nutrition     Nutrition?
+  checkIn       CheckIn?
+  reflections   Reflection[]
+  photos        Photo[]
+  measurements  Measurement[]
+  medications   Medication[]
+}
+
+model Photo {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  url         String   // Path to stored file
+  caption     String?
+  createdAt   DateTime @default(now())
+}
+
+model Workout {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  name        String?
+  instructor  String?
+  platform    String?
+  duration    Int?     // in minutes
+  type        String?  // Mobility, Strength, Cardio, etc.
+  focusArea   String?
+  intensity   String?  // Low, Moderate, High
+  notes       String?
+}
+
+model Nutrition {
+  id          String   @id @default(uuid())
+  dailyLogId  String   @unique
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+
+  calories    Int?
+  protein     Int?
+  carbs       Int?
+  fat         Int?
+  fiber       Int?
+  
+  // JSON blob for detailed micros or specific meals if we want flexibility
+  mealsJson   String?  // Storing structured meal data as JSON
+  microsJson  String?  // Storing micronutrients as JSON
+}
+
+model CheckIn {
+  id          String   @id @default(uuid())
+  dailyLogId  String   @unique
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+
+  sleepHours  Float?
+  weight      Float?
+  water       Int?     // in ml
+  caffeine    String?
+  alcohol     String?
+  supplements String?
+  pain        String?
+  notes       String?
+}
+
+model Reflection {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  time        DateTime? // Specific time of reflection
+  type        String?   // "Post-Workout", "Morning", "Evening", "Ad-hoc"
+  
+  mood        String?
+  energy      String?
+  confidence  String?
+  notes       String?
+}
+
+model Measurement {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  
+  // Body measurements in cm
+  chest       Float?
+  waist       Float?
+  hips        Float?
+  leftArm     Float?
+  rightArm    Float?
+  leftThigh   Float?
+  rightThigh  Float?
+  leftCalf    Float?
+  rightCalf   Float?
+  neck        Float?
+  shoulders   Float?
+  
+  notes       String?
+}
+
+model Medication {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  name        String
+  dosage      String?
+  time        DateTime?
+  taken       Boolean  @default(false)
+  notes       String?
+  createdAt   DateTime @default(now())
+}
