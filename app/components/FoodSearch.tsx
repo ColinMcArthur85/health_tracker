@@ -62,6 +62,9 @@ export default function FoodSearch({ onFoodsChange, initialFoods = [] }: FoodSea
         if (response.status === 503 && data?.retryAfterMs) {
           // Respect server suggested backoff
           nextAllowedRef.current = Date.now() + Number(data.retryAfterMs);
+        } else if (response.status === 429 && data?.retryAfterMs) {
+          // Local throttle when server concurrency limit reached
+          nextAllowedRef.current = Date.now() + Number(data.retryAfterMs);
         }
         if (Array.isArray(data.foods)) {
           setResults(data.foods);

@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
+import { recordUsdaRequest, getUsdaStats } from "@/lib/rateLimitMonitor";
 
 // Simple in-memory cache with TTL
 const cache = new Map<string, { expires: number; data: any }>();
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
-// Basic rate-limit guard to avoid hammering USDA for same query concurrently
+// Dedup for identical queries + simple concurrency limiter
 const inFlight = new Map<string, Promise<Response>>();
+let activeCount = 0;
+const ACTIVE_LIMIT = 4; // max concurrent outbound USDA requests
 
-const USDA_API_KEY = process.env.USDA_API_KEY || "DEMO_KEY"; // DEMO_KEY works but has rate limits
+const USDA_API_KEY = process.env.USDA_API_KEY || "DEMO_KEY"; // DEMO_KEY works but has stricter rate limits
+if (USDA_API_KEY === "DEMO_KEY") {
+  console.warn("USDA_API_KEY not set; using DEMO_KEY with limited quota.");
+}
 const USDA_BASE_URL = "https://api.nal.usda.gov/fdc/v1";
 
 interface USDAFood {
@@ -79,17 +85,30 @@ export async function GET(req: Request) {
     // Search USDA FoodData Central
     const searchUrl = `${USDA_BASE_URL}/foods/search?query=${encodeURIComponent(query)}&pageSize=10&api_key=${USDA_API_KEY}`;
 
+    // Concurrency guard (lightweight throttle)
+    if (activeCount >= ACTIVE_LIMIT && !inFlight.has(cacheKey)) {
+      const retryMs = 750;
+      return NextResponse.json({
+        error: "Server is busy, please retry soon",
+        retryAfterMs: retryMs,
+        stats: getUsdaStats(),
+      }, { status: 429 });
+    }
+
     // Deduplicate concurrent requests for the same query
     if (!inFlight.has(cacheKey)) {
       inFlight.set(
         cacheKey,
         (async () => {
+          activeCount += 1;
           const response = await fetchWithBackoff(searchUrl);
           if (!response.ok) {
             const msg = `USDA API error: ${response.status} ${response.statusText}`;
             console.error(msg);
             const retryMs = getRetryAfterMs(response);
             const payload = { error: "Failed to fetch from USDA API", retryAfterMs: retryMs ?? undefined };
+            recordUsdaRequest(response.status);
+            activeCount = Math.max(0, activeCount - 1);
             return NextResponse.json(payload, { status: response.status === 429 ? 503 : 500 });
           }
 
@@ -115,8 +134,23 @@ export async function GET(req: Request) {
             };
           });
 
-          const result = { foods };
+          const rateRemaining = response.headers.get("X-RateLimit-Remaining");
+          const rateLimit = response.headers.get("X-RateLimit-Limit");
+          const rateReset = response.headers.get("X-RateLimit-Reset");
+
+          recordUsdaRequest(response.status);
+
+          const result = {
+            foods,
+            rateLimit: {
+              remaining: rateRemaining ? Number(rateRemaining) : undefined,
+              limit: rateLimit ? Number(rateLimit) : undefined,
+              reset: rateReset ? Number(rateReset) : undefined,
+            },
+            stats: getUsdaStats(),
+          };
           cache.set(cacheKey, { expires: now + CACHE_TTL_MS, data: result });
+          activeCount = Math.max(0, activeCount - 1);
           return NextResponse.json(result);
         })()
       );
