@@ -1,15 +1,12 @@
-import { NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { NextResponse } from "next/server";
+import db from "@/lib/db";
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ foodId: string }> }
-) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ foodId: string }> }) {
   try {
     const { foodId } = await params;
-    
+
     // Get the food item to find its nutrition record
-    const foodItem = await db.foodItem.findUnique({
+    const foodItem = await (db as any).foodItem.findUnique({
       where: { id: foodId },
       include: {
         nutrition: true,
@@ -17,19 +14,19 @@ export async function DELETE(
     });
 
     if (!foodItem) {
-      return NextResponse.json({ error: 'Food item not found' }, { status: 404 });
+      return NextResponse.json({ error: "Food item not found" }, { status: 404 });
     }
 
     // Get all food items for this nutrition record to recalculate totals
-    const allFoodItems = await db.foodItem.findMany({
+    const allFoodItems = await (db as any).foodItem.findMany({
       where: { nutritionId: foodItem.nutritionId },
     });
 
     // Calculate new totals excluding the item being deleted
     const newTotals = allFoodItems
-      .filter(item => item.id !== foodId)
+      .filter((item: any) => item.id !== foodId)
       .reduce(
-        (acc, item) => ({
+        (acc: any, item: any) => ({
           calories: acc.calories + (item.calories || 0),
           protein: acc.protein + (item.protein || 0),
           carbs: acc.carbs + (item.carbs || 0),
@@ -40,7 +37,7 @@ export async function DELETE(
       );
 
     // Delete the food item
-    await db.foodItem.delete({
+    await (db as any).foodItem.delete({
       where: { id: foodId },
     });
 
@@ -58,7 +55,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting food item:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error("Error deleting food item:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

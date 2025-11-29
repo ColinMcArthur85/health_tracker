@@ -139,7 +139,7 @@ export default function FoodSearch({ onFoodsChange, initialFoods = [] }: FoodSea
                     {food.servingSize} {food.servingUnit} • {food.calories || "?"} cal
                   </p>
                 </div>
-                <Plus size={20} className="text-emerald-400 flex-shrink-0 ml-2" />
+                <Plus size={20} className="text-emerald-400 shrink-0 ml-2" />
               </div>
             </button>
           ))}
