@@ -26,7 +26,22 @@ model DailyLog {
   reflections   Reflection[]
   photos        Photo[]
   measurements  Measurement[]
+
   medications   Medication[]
+  dreams        Dream[]
+}
+
+model Dream {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  content     String
+  mood        String?
+  tags        String?  // Comma separated tags
+  analysis    String?  // AI analysis result
+  
+  createdAt   DateTime @default(now())
 }
 
 model Photo {
@@ -68,6 +83,28 @@ model Nutrition {
   // JSON blob for detailed micros or specific meals if we want flexibility
   mealsJson   String?  // Storing structured meal data as JSON
   microsJson  String?  // Storing micronutrients as JSON
+  
+  // Relations
+  foodItems   FoodItem[]  // Individual food items with API data
+}
+
+model FoodItem {
+  id           String    @id @default(uuid())
+  nutritionId  String
+  nutrition    Nutrition @relation(fields: [nutritionId], references: [id], onDelete: Cascade)
+  
+  name         String
+  fdcId        String?   // USDA FoodData Central ID
+  servingSize  Float?    // Amount of serving
+  servingUnit  String?   // Unit (g, oz, cup, etc.)
+  
+  calories     Int?
+  protein      Int?
+  carbs        Int?
+  fat          Int?
+  fiber        Int?
+  
+  createdAt    DateTime  @default(now())
 }
 
 model CheckIn {

@@ -11,7 +11,9 @@ import {
   Heart, 
   Droplets, 
   TrendingUp,
-  BookOpen
+  BookOpen,
+  Search,
+  CloudRain
 } from 'lucide-react';
 
 const navItems = [
@@ -19,10 +21,12 @@ const navItems = [
   { href: '/dashboard/workouts', icon: Dumbbell, label: 'Workouts' },
   { href: '/dashboard/nutrition', icon: Apple, label: 'Nutrition' },
   { href: '/dashboard/sleep', icon: Moon, label: 'Sleep' },
+  { href: '/dashboard/dreams', icon: CloudRain, label: 'Dream Log' },
   { href: '/dashboard/body', icon: Scale, label: 'Body Metrics' },
   { href: '/dashboard/wellness', icon: Heart, label: 'Wellness' },
   { href: '/dashboard/hydration', icon: Droplets, label: 'Hydration' },
   { href: '/dashboard/analytics', icon: TrendingUp, label: 'Analytics' },
+  { href: '/dashboard/search', icon: Search, label: 'Search' },
   { href: '/dashboard/journal', icon: BookOpen, label: 'Daily Journal' },
 ];
 

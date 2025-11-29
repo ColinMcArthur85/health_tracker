@@ -6,6 +6,19 @@ import { Edit2, Trash2 } from 'lucide-react';
 import EditNutritionModal from './EditNutritionModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
+interface FoodItem {
+  id: string;
+  name: string;
+  fdcId?: string | null;
+  servingSize?: number | null;
+  servingUnit?: string | null;
+  calories?: number | null;
+  protein?: number | null;
+  carbs?: number | null;
+  fat?: number | null;
+  fiber?: number | null;
+}
+
 interface Nutrition {
   id: string;
   calories?: number | null;
@@ -14,6 +27,7 @@ interface Nutrition {
   fat?: number | null;
   fiber?: number | null;
   mealsJson?: string | null;
+  foodItems?: FoodItem[];
 }
 
 export default function NutritionDetails({ nutrition }: { nutrition?: Nutrition | null }) {
@@ -21,16 +35,6 @@ export default function NutritionDetails({ nutrition }: { nutrition?: Nutrition 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
-  const meals = (() => {
-    if (!nutrition?.mealsJson) return [];
-    try {
-      const parsed = JSON.parse(nutrition.mealsJson);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
-  })();
 
   const handleDelete = async () => {
     if (!nutrition) return;
@@ -43,6 +47,15 @@ export default function NutritionDetails({ nutrition }: { nutrition?: Nutrition 
     } finally {
       setIsDeleting(false);
       setShowDelete(false);
+    }
+  };
+
+  const handleDeleteFoodItem = async (foodItemId: string) => {
+    try {
+      await fetch(`/api/log/nutrition/food/${foodItemId}`, { method: 'DELETE' });
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting food item:', error);
     }
   };
 
@@ -80,12 +93,34 @@ export default function NutritionDetails({ nutrition }: { nutrition?: Nutrition 
         <MacroCard label="Fiber" value={nutrition.fiber ? `${nutrition.fiber}g` : '-'} />
       </div>
 
-      {meals.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-slate-400">Meals Logged:</p>
-          {meals.map((meal, i) => (
-            <div key={i} className="text-sm bg-slate-950 p-2 rounded border border-slate-800">
-              {typeof meal === 'string' ? meal : JSON.stringify(meal)}
+      {/* Individual Food Items */}
+      {nutrition.foodItems && nutrition.foodItems.length > 0 && (
+        <div className="space-y-2 mb-4">
+          <p className="text-sm font-medium text-slate-400">Food Items:</p>
+          {nutrition.foodItems.map((item) => (
+            <div key={item.id} className="bg-slate-950 p-3 rounded-lg border border-slate-800">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="font-medium text-white">{item.name}</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {item.servingSize} {item.servingUnit}
+                  </p>
+                  <div className="flex gap-3 mt-2 text-xs text-slate-400">
+                    <span>{item.calories || 0} cal</span>
+                    <span>{item.protein || 0}g protein</span>
+                    <span>{item.carbs || 0}g carbs</span>
+                    <span>{item.fat || 0}g fat</span>
+                    {item.fiber && <span>{item.fiber}g fiber</span>}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDeleteFoodItem(item.id)}
+                  className="p-1 hover:bg-slate-800 rounded transition-colors ml-2"
+                  title="Remove this item"
+                >
+                  <Trash2 size={14} className="text-red-400" />
+                </button>
+              </div>
             </div>
           ))}
         </div>

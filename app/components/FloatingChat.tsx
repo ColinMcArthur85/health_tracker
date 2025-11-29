@@ -18,7 +18,7 @@ type Message = {
 export default function FloatingChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: '💪 What\'s up, warrior! Iron Mike here. Time to DOMINATE your health goals. No excuses, no shortcuts - just RESULTS. What are we crushing today?' }
+    { role: 'assistant', content: '💪 What\'s up, warrior! dAIvid Goggins here. Time to DOMINATE your health goals. No excuses, no shortcuts - just RESULTS. What are we crushing today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +63,7 @@ export default function FloatingChat() {
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 z-50 font-bold text-2xl animate-pulse"
-        title="Talk to Iron Mike - Your Motivational Coach"
+        title="Talk to dAIvid Goggins - Your Motivational Coach"
       >
         💪
       </button>
@@ -77,7 +77,7 @@ export default function FloatingChat() {
         <div className="flex items-center gap-2">
           <div className="text-2xl">💪</div>
           <div>
-            <h3 className="font-bold text-white">Iron Mike</h3>
+            <h3 className="font-bold text-white">dAIvid Goggins</h3>
             <p className="text-xs text-orange-300">Your Motivational Coach</p>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function FloatingChat() {
                💪
              </div>
              <div className="bg-slate-800 p-3 rounded-2xl rounded-tl-none text-slate-400 text-sm">
-               <span className="animate-pulse">Iron Mike is thinking...</span>
+               <span className="animate-pulse">dAIvid Goggins is thinking...</span>
              </div>
           </div>
         )}

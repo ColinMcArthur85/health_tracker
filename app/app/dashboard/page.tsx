@@ -4,7 +4,8 @@ import db from '@/lib/db';
 import { Dumbbell, Apple, Moon, Scale, Droplets, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { formatUTCDateLong } from '@/lib/dateUtils';
-import ExportButton from '@/components/ExportButton';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import QuickActions from '@/components/QuickActions';
 
 export default async function DashboardPage() {
   // Fetch summary statistics
@@ -48,13 +49,10 @@ export default async function DashboardPage() {
     <DashboardLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Welcome back, Colin 💪</h1>
-            <p className="text-slate-400">Here's your health overview</p>
-          </div>
-          <ExportButton />
-        </div>
+        <DashboardHeader />
+
+        {/* Quick Actions */}
+        <QuickActions />
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

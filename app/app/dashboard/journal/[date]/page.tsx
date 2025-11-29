@@ -10,7 +10,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 // Client components for modals
 import LogModal from "@/components/LogModal";
 import WorkoutForm from "@/components/forms/WorkoutForm";
-import NutritionForm from "@/components/forms/NutritionForm";
+import NutritionFormWithAPI from "@/components/forms/NutritionFormWithAPI";
 import CheckInForm from "@/components/forms/CheckInForm";
 import PhotoUpload from "@/components/PhotoUpload";
 import WorkoutList from "@/components/WorkoutList";
@@ -34,7 +34,11 @@ export default async function DailyLogPage({ params }: PageProps) {
     where: { date: getUTCMidnight(date) },
     include: {
       workouts: true,
-      nutrition: true,
+      nutrition: {
+        include: {
+          foodItems: true,
+        },
+      },
       reflections: true,
       checkIn: true,
       photos: true,
@@ -85,7 +89,7 @@ export default async function DailyLogPage({ params }: PageProps) {
               </button>
             }
           >
-            <NutritionForm date={date} />
+            <NutritionFormWithAPI date={date} />
           </LogModal>
 
           <LogModal
