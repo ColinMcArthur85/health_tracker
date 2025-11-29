@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import db from '@/lib/db';
-import { getUTCMidnight } from '@/lib/dateUtils';
+import { NextResponse } from "next/server";
+import db from "@/lib/db";
+import { getUTCMidnight } from "@/lib/dateUtils";
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       create: { date: getUTCMidnight(date) },
     });
 
-    if (mode === 'quick') {
+    if (mode === "quick") {
       // Append to mealsJson (legacy quick-add mode)
       const existing = await db.nutrition.findUnique({
         where: { dailyLogId: dailyLog.id },
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
           meals = [];
         }
       }
-      
+
       meals.push({ item: meal, time: new Date().toISOString() });
 
       await db.nutrition.upsert({
@@ -52,15 +52,15 @@ export async function POST(req: Request) {
       // Update macros with accumulated values
       const nutrition = await db.nutrition.upsert({
         where: { dailyLogId: dailyLog.id },
-        update: { 
+        update: {
           calories: newCalories,
           protein: newProtein,
           carbs: newCarbs,
           fat: newFat,
           fiber: newFiber,
         },
-        create: { 
-          dailyLogId: dailyLog.id, 
+        create: {
+          dailyLogId: dailyLog.id,
           calories: newCalories,
           protein: newProtein,
           carbs: newCarbs,
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
 
       // Create food items if provided (from USDA API)
       if (foodItems && Array.isArray(foodItems) && foodItems.length > 0) {
-        await db.foodItem.createMany({
+        await (db as any).foodItem.createMany({
           data: foodItems.map((item: any) => ({
             nutritionId: nutrition.id,
             name: item.name,
