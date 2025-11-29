@@ -30,7 +30,7 @@ export default async function DailyLogPage({ params }: PageProps) {
     return notFound();
   }
 
-  const log = (await db.dailyLog.findUnique({
+  const log = (await (db as any).dailyLog.findUnique({
     where: { date: getUTCMidnight(date) },
     include: {
       workouts: true,
