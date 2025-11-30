@@ -88,11 +88,14 @@ export async function GET(req: Request) {
     // Concurrency guard (lightweight throttle)
     if (activeCount >= ACTIVE_LIMIT && !inFlight.has(cacheKey)) {
       const retryMs = 750;
-      return NextResponse.json({
-        error: "Server is busy, please retry soon",
-        retryAfterMs: retryMs,
-        stats: getUsdaStats(),
-      }, { status: 429 });
+      return NextResponse.json(
+        {
+          error: "Server is busy, please retry soon",
+          retryAfterMs: retryMs,
+          stats: getUsdaStats(),
+        },
+        { status: 429 }
+      );
     }
 
     // Deduplicate concurrent requests for the same query
