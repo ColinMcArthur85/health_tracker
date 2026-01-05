@@ -3,6 +3,8 @@ import FilterBar from '@/components/dashboard/FilterBar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import db from '@/lib/db';
 import { Heart, Smile, Zap, Pill } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import Link from 'next/link';
 
 export default async function WellnessPage() {
   const reflections = await db.reflection.findMany({
@@ -39,8 +41,8 @@ export default async function WellnessPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Wellness</h1>
-          <p className="text-slate-400">Track mood, energy, supplements, and medications</p>
+          <h1 className="text-3xl font-bold mb-2">Mood Tracker</h1>
+          <p className="text-slate-400">Track emotional state, energy levels, and mental clarity</p>
         </div>
 
         {/* Summary Cards */}
@@ -107,10 +109,16 @@ export default async function WellnessPage() {
           </div>
           
           {reflections.length === 0 && (
-            <div className="text-center py-12 text-slate-400">
-              <Heart className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No wellness data logged yet</p>
-            </div>
+            <EmptyState
+              icon={Smile}
+              title="No mood data yet"
+              description="Track your emotional patterns, energy levels, and mental clarity. Understanding your mood cycles helps optimize your daily routines."
+              ActionComponent={
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                  Log Your First Mood
+                </Link>
+              }
+            />
           )}
         </div>
 

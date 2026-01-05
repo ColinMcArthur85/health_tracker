@@ -17,8 +17,9 @@ export async function POST(req: Request) {
       data: {
         dailyLogId: dailyLog.id,
         url,
+        view: data.view || 'FRONT',
         caption,
-      },
+      } as any,
     });
 
     return NextResponse.json({ success: true });

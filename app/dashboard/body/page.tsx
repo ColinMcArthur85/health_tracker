@@ -1,6 +1,7 @@
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import FilterBar from '@/components/dashboard/FilterBar';
 import MetricCard from '@/components/dashboard/MetricCard';
+import BodyMap from '@/components/dashboard/BodyMap';
 import db from '@/lib/db';
 import { Scale, TrendingDown, TrendingUp, Ruler } from 'lucide-react';
 
@@ -32,11 +33,16 @@ export default async function BodyPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Body Metrics</h1>
-          <p className="text-slate-400">Track weight and body measurements</p>
+      <div className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-extrabold tracking-tight text-white mb-2">Body Metrics</h1>
+            <p className="text-slate-400 text-lg font-medium">Comprehensive tracking of your physical evolution.</p>
+          </div>
         </div>
+
+        {/* Body Visualizer Section */}
+        <BodyMap />
 
         {/* Weight Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -133,7 +139,7 @@ export default async function BodyPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800">
-                  {measurements.map((m: typeof measurements[0]) => (
+                  {measurements.map((m: any) => (
                     <tr key={m.id} className="hover:bg-slate-800/30 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {m.dailyLog.date.toLocaleDateString()}

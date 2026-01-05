@@ -10,11 +10,12 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 
 // Client components for modals
 // Client components for modals
-import LogModal from '../../../../components/LogModal'; 
-import WorkoutForm from '../../../../components/forms/WorkoutForm';
-import NutritionForm from '../../../../components/forms/NutritionForm';
-import CheckInForm from '../../../../components/forms/CheckInForm';
-import PhotoUpload from '../../../../components/PhotoUpload';
+import LogModal from '@/components/LogModal'; 
+import WorkoutForm from '@/components/forms/WorkoutForm';
+import NutritionForm from '@/components/forms/NutritionForm';
+import CheckInForm from '@/components/forms/CheckInForm';
+import PhotoUpload from '@/components/PhotoUpload';
+import PhotoActions from '@/components/photos/PhotoActions';
 
 interface PageProps {
   params: Promise<{
@@ -109,13 +110,21 @@ export default async function DailyLogPage({ params }: PageProps) {
               <h2 className="text-lg font-semibold mb-3 text-slate-300">Photos</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {log.photos?.map((photo: any) => (
-                  <div key={photo.id} className="relative aspect-square rounded-xl overflow-hidden border border-slate-800">
+                  <div key={photo.id} className="relative aspect-square rounded-xl overflow-hidden border border-slate-800 group">
                     <Image src={photo.url} alt={photo.caption || 'Progress photo'} fill className="object-cover" />
+                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/60 rounded text-[10px] font-bold text-white uppercase tracking-wider">
+                      {photo.view}
+                    </div>
                     {photo.caption && (
                       <div className="absolute bottom-0 inset-x-0 bg-black/60 p-2 text-xs text-white truncate">
                         {photo.caption}
                       </div>
                     )}
+                    <PhotoActions 
+                      photoId={photo.id}
+                      currentView={photo.view}
+                      currentCaption={photo.caption}
+                    />
                   </div>
                 ))}
               </div>

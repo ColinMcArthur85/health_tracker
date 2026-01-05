@@ -3,6 +3,8 @@ import FilterBar from '@/components/dashboard/FilterBar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import db from '@/lib/db';
 import { Apple, Beef, Wheat, Droplet } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import Link from 'next/link';
 
 export default async function NutritionPage() {
   const nutritionLogs = await db.nutrition.findMany({
@@ -120,10 +122,16 @@ export default async function NutritionPage() {
           </div>
           
           {nutritionLogs.length === 0 && (
-            <div className="text-center py-12 text-slate-400">
-              <Apple className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No nutrition data logged yet</p>
-            </div>
+            <EmptyState
+              icon={Apple}
+              title="No nutrition data yet"
+              description="Start tracking your meals and macros to optimize your nutrition. Small daily adjustments lead to major long-term results."
+              ActionComponent={
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                  Log Your First Meal
+                </Link>
+              }
+            />  
           )}
         </div>
       </div>

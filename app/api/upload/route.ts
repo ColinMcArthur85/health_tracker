@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { put } from '@vercel/blob';
 
 export async function POST(req: Request) {
   try {
@@ -12,26 +11,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create uploads directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), 'public/uploads');
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (e) {
-      // Ignore error if directory exists
-    }
-
     // Generate unique filename
-    const filename = `${date}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
-    const filepath = path.join(uploadDir, filename);
+    const filename = `progress-photos/${date}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
 
-    await writeFile(filepath, buffer);
+    // Upload to Vercel Blob Storage
+    const blob = await put(filename, file, {
+      access: 'public',
+      addRandomSuffix: false,
+    });
 
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    return NextResponse.json({ url: blob.url });
   } catch (error) {
-    console.error(error);
+    console.error('Upload error:', error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

@@ -9,6 +9,7 @@ export default function PhotoUpload({ date, onClose }: { date: string, onClose?:
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [view, setView] = useState('FRONT'); // FRONT, SIDE, BACK
   const [caption, setCaption] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +42,7 @@ export default function PhotoUpload({ date, onClose }: { date: string, onClose?:
       await fetch('/api/log/photo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date, url, caption }),
+        body: JSON.stringify({ date, url, view, caption }),
       });
 
       router.refresh();
@@ -81,15 +82,30 @@ export default function PhotoUpload({ date, onClose }: { date: string, onClose?:
         </div>
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Caption</label>
-        <input 
-          type="text" 
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
-          className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white"
-          placeholder="Optional caption..."
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-400 mb-1">View Type</label>
+          <select 
+            value={view}
+            onChange={(e) => setView(e.target.value)}
+            className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white"
+          >
+            <option value="FRONT">Front View</option>
+            <option value="SIDE">Side View</option>
+            <option value="BACK">Back View</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-400 mb-1">Caption</label>
+          <input 
+            type="text" 
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white"
+            placeholder="Optional..."
+          />
+        </div>
       </div>
 
       <button 

@@ -13,21 +13,62 @@ import {
   TrendingUp,
   BookOpen,
   Search,
-  CloudRain
+  CloudRain,
+  Brain,
+  Pill,
+  TestTube,
+  Smile,
+  Image
 } from 'lucide-react';
 
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
-  { href: '/dashboard/workouts', icon: Dumbbell, label: 'Workouts' },
-  { href: '/dashboard/nutrition', icon: Apple, label: 'Nutrition' },
-  { href: '/dashboard/sleep', icon: Moon, label: 'Sleep' },
-  { href: '/dashboard/dreams', icon: CloudRain, label: 'Dream Log' },
-  { href: '/dashboard/body', icon: Scale, label: 'Body Metrics' },
-  { href: '/dashboard/wellness', icon: Heart, label: 'Wellness' },
-  { href: '/dashboard/hydration', icon: Droplets, label: 'Hydration' },
-  { href: '/dashboard/analytics', icon: TrendingUp, label: 'Analytics' },
-  { href: '/dashboard/search', icon: Search, label: 'Search' },
-  { href: '/dashboard/journal', icon: BookOpen, label: 'Daily Journal' },
+const navSections = [
+  {
+    title: null,
+    items: [
+      { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' }
+    ]
+  },
+  {
+    title: 'Body Health',
+    items: [
+      { href: '/dashboard/workouts', icon: Dumbbell, label: 'Workouts' },
+      { href: '/dashboard/body', icon: Scale, label: 'Measurements' },
+      { href: '/dashboard/photos', icon: Image, label: 'Progress Photos' },
+      { href: '/dashboard/hydration', icon: Droplets, label: 'Hydration' },
+    ]
+  },
+  {
+    title: 'Mind Health',
+    items: [
+      { href: '/dashboard/sleep', icon: Moon, label: 'Sleep' },
+      { href: '/dashboard/dreams', icon: Brain, label: 'Dreams' },
+      { href: '/dashboard/stress', icon: CloudRain, label: 'Stress' },
+    ]
+  },
+  {
+    title: 'Internal Health',
+    items: [
+      { href: '/dashboard/nutrition', icon: Apple, label: 'Nutrition' },
+      { href: '/dashboard/medications', icon: Pill, label: 'Medications' },
+      { href: '/dashboard/protocols', icon: TestTube, label: 'Protocols' },
+      { href: '/dashboard/bloodwork', icon: Heart, label: 'Bloodwork' },
+      { href: '/dashboard/hormones', icon: Droplets, label: 'Hormones' },
+    ]
+  },
+  {
+    title: 'Mood Tracker',
+    items: [
+      { href: '/dashboard/mood', icon: Smile, label: 'Daily Mood' },
+    ]
+  },
+  {
+    title: 'Tools',
+    items: [
+      { href: '/dashboard/analytics', icon: TrendingUp, label: 'Analytics' },
+      { href: '/dashboard/search', icon: Search, label: 'Search' },
+      { href: '/dashboard/journal', icon: BookOpen, label: 'Daily Journal' },
+    ]
+  }
 ];
 
 export default function SideNav() {
@@ -35,28 +76,39 @@ export default function SideNav() {
 
   return (
     <aside className="fixed left-0 top-16 bottom-0 w-64 bg-slate-900 border-r border-slate-800 overflow-y-auto">
-      <nav className="p-4 space-y-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`
-                flex items-center space-x-3 px-4 py-3 rounded-lg transition-all
-                ${isActive 
-                  ? 'bg-gradient-to-r from-blue-600 to-emerald-600 text-white shadow-lg shadow-blue-500/20' 
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
-                }
-              `}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
-            </Link>
-          );
-        })}
+      <nav className="p-4 space-y-6">
+        {navSections.map((section, sectionIdx) => (
+          <div key={sectionIdx}>
+            {section.title && (
+              <h3 className="px-4 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                {section.title}
+              </h3>
+            )}
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const isActive = pathname === item.href;
+                const Icon = item.icon;
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`
+                      flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all
+                      ${isActive 
+                        ? 'bg-linear-to-r from-blue-600 to-emerald-600 text-white shadow-lg shadow-blue-500/20' 
+                        : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
+                      }
+                    `}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
     </aside>
   );

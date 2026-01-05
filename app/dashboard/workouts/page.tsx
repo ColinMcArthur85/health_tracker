@@ -3,6 +3,8 @@ import FilterBar from '@/components/dashboard/FilterBar';
 import db from '@/lib/db';
 import { formatUTCDateLong } from '@/lib/dateUtils';
 import { Dumbbell, Clock, Flame } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import Link from 'next/link';
 
 export default async function WorkoutsPage() {
   const workouts = await db.workout.findMany({
@@ -138,10 +140,16 @@ export default async function WorkoutsPage() {
           </div>
           
           {workouts.length === 0 && (
-            <div className="text-center py-12 text-slate-400">
-              <Dumbbell className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No workouts logged yet</p>
-            </div>
+            <EmptyState
+              icon={Dumbbell}
+              title="No workouts yet"
+              description="Start tracking your training sessions to see your progress over time. Every workout counts!"
+              ActionComponent={
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                  Log Your First Workout
+                </Link>
+              }
+            />
           )}
         </div>
       </div>

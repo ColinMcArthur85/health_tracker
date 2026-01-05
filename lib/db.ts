@@ -1,3 +1,4 @@
+// Re-evaluating Prisma Client after schema update
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
@@ -5,11 +6,11 @@ const prismaClientSingleton = () => {
 };
 
 declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleton>;
+  var prisma_longevity_v2: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 
-const db = globalThis.prisma ?? prismaClientSingleton();
+const db = globalThis.prisma_longevity_v2 ?? prismaClientSingleton();
 
 export default db;
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = db;
+if (process.env.NODE_ENV !== 'production') globalThis.prisma_longevity_v2 = db;

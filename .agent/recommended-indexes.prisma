@@ -1,0 +1,126 @@
+// Database indexes for optimal performance
+// Add these to your schema.prisma file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  
+  @@index([email]) // For login queries
+}
+
+model DailyLog {
+  id        String   @id @default(uuid())
+  date      DateTime @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rating    Float?
+
+  workouts      Workout[]
+  nutrition     Nutrition?
+  checkIn       CheckIn?
+  reflections   Reflection[]
+  photos        Photo[]
+  measurements  Measurement[]
+  medications   Medication[]
+  dreams        Dream[]
+  protocolLogs  ProtocolLog[]
+  
+  @@index([date]) // For date-based queries
+}
+
+model Workout {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  name        String?
+  instructor  String?
+  platform    String?
+  duration    Int?
+  type        String?
+  focusArea   String?
+  intensity   String?
+  notes       String?
+  
+  @@index([dailyLogId]) // For fetching workouts by date
+  @@index([type]) // For filtering by type
+  @@index([intensity]) // For filtering by intensity
+}
+
+model CheckIn {
+  id          String   @id @default(uuid())
+  dailyLogId  String   @unique
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+
+  sleepHours  Float?
+  weight      Float?
+  water       Int?
+  caffeine    String?
+  alcohol     String?
+  supplements String?
+  pain        String?
+  notes       String?
+  
+  @@index([weight]) // For weight tracking queries
+  @@index([sleepHours]) // For sleep analytics
+}
+
+model Photo {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  url         String
+  caption     String?
+  view        String   // FRONT, SIDE, BACK, OTHER
+  analysis    String?
+  createdAt   DateTime @default(now())
+  
+  @@index([dailyLogId, view]) // For fetching photos by date and view
+  @@index([createdAt]) // For ordering by upload time
+}
+
+model Protocol {
+  id          String   @id @default(uuid())
+  name        String
+  substance   String
+  dosage      String
+  frequency   String
+  startDate   DateTime @default(now())
+  status      String   @default("ACTIVE")
+  notes       String?
+  
+  logs        ProtocolLog[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([status]) // For filtering active protocols
+  @@index([startDate]) // For ordering by start date
+}
+
+model Reflection {
+  id          String   @id @default(uuid())
+  dailyLogId  String
+  dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  time        DateTime?
+  type        String?
+  mood        String?
+  energy      String?
+  confidence  String?
+  notes       String?
+  
+  @@index([dailyLogId]) // For fetching by date
+  @@index([mood]) // For mood analytics
+}

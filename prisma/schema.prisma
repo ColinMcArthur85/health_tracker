@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model DailyLog {
@@ -30,6 +30,7 @@ model DailyLog {
 
   medications   Medication[]
   dreams        Dream[]
+  protocolLogs  ProtocolLog[]
 }
 
 model Dream {
@@ -51,7 +52,9 @@ model Photo {
   dailyLog    DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
   
   url         String   // Path to stored file
+  view        String   @default("FRONT") // FRONT, SIDE, BACK
   caption     String?
+  analysis    String?  // AI analysis result (Markdown/JSON)
   createdAt   DateTime @default(now())
 }
 
@@ -169,6 +172,42 @@ model Medication {
   dosage      String?
   time        DateTime?
   taken       Boolean  @default(false)
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model Protocol {
+  id          String   @id @default(uuid())
+  name        String   // e.g., "Testosterone Optimization"
+  substance   String   // e.g., "Clomiphene"
+  dosage      String   // e.g., "25mg"
+  frequency   String   // e.g., "E3D", "Daily"
+  startDate   DateTime @default(now())
+  status      String   @default("ACTIVE") // ACTIVE, PAUSED, COMPLETED
+  notes       String?
+  
+  logs        ProtocolLog[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ProtocolLog {
+  id          String   @id @default(uuid())
+  protocolId  String
+  protocol    Protocol @relation(fields: [protocolId], references: [id], onDelete: Cascade)
+  
+  dailyLogId  String?
+  dailyLog    DailyLog? @relation(fields: [dailyLogId], references: [id], onDelete: SetNull)
+  
+  date        DateTime @default(now())
+  taken       Boolean  @default(true)
+  
+  // Side effects tracking (Stop Signals)
+  headache    Int?     // 1-5 scale
+  anxiety     Int?     // 1-5 scale
+  sleepQuality Int?    // 1-5 scale
+  mood        Int?     // 1-5 scale
+  
   notes       String?
   createdAt   DateTime @default(now())
 }

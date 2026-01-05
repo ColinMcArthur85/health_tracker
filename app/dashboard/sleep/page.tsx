@@ -3,6 +3,8 @@ import FilterBar from '@/components/dashboard/FilterBar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import db from '@/lib/db';
 import { Moon, TrendingUp } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import Link from 'next/link';
 
 export default async function SleepPage() {
   const checkIns = await db.checkIn.findMany({
@@ -103,10 +105,16 @@ export default async function SleepPage() {
           </div>
           
           {checkIns.length === 0 && (
-            <div className="text-center py-12 text-slate-400">
-              <Moon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No sleep data logged yet</p>
-            </div>
+            <EmptyState
+              icon={Moon}
+              title="No sleep data yet"
+              description="Start tracking your sleep patterns to improve rest quality and overall health. Consistent sleep tracking reveals powerful insights."
+              ActionComponent={
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                  Log Your First Night
+                </Link>
+              }
+            />
           )}
         </div>
       </div>
