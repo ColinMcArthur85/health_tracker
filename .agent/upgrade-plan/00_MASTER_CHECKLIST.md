@@ -125,18 +125,20 @@ This is the master execution checklist for upgrading the Health Journal applicat
 
 ### Security Headers
 
-- [ ] **2.6** Add security headers to `next.config.ts`
-  - X-Frame-Options
-  - X-Content-Type-Options
-  - Content-Security-Policy
-  - Referrer-Policy
+- [x] **2.6** Add security headers to `next.config.ts` — ✅
+  - X-Frame-Options ✅
+  - X-Content-Type-Options ✅
+  - X-XSS-Protection ✅
+  - Content-Security-Policy ✅
+  - Referrer-Policy ✅
+  - Permissions-Policy ✅
 
 ### Input Validation
 
-- [ ] **2.7** Create `lib/validation.ts` utility
-- [ ] **2.8** Create `lib/sanitize.ts` utility
-- [ ] **2.9** Add Zod schemas for all API inputs
-- [ ] **2.10** Add file upload validation (type, size)
+- [x] **2.7** Create `lib/validation.ts` utility — Created `app/lib/validation.ts` with Zod schemas ✅
+- [x] **2.8** Create `lib/sanitize.ts` utility — Created `app/lib/sanitize.ts` with XSS prevention ✅
+- [x] **2.9** Add Zod schemas for all API inputs — **34 tests passing** ✅
+- [x] **2.10** Add file upload validation (type, size) — Included in fileUploadSchema ✅
 
 ### Rate Limiting
 
