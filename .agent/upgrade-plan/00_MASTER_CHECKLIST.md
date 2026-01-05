@@ -117,11 +117,15 @@ This is the master execution checklist for upgrading the Health Journal applicat
 
 ### High Priority (Authentication)
 
-- [ ] **2.1** 🔴 Install NextAuth.js or Clerk
-- [ ] **2.2** 🔴 Create authentication middleware
-- [ ] **2.3** 🔴 Protect `/dashboard/*` routes
-- [ ] **2.4** 🔴 Protect all API routes with auth checks
-- [ ] **2.5** 🔴 Implement Demo Mode (read-only guest access)
+- [x] **2.1** 🔴 Install NextAuth.js — ✅
+- [x] **2.2** 🔴 Create authentication middleware — Created `middleware.ts` ✅
+- [x] **2.3** 🔴 Protect `/dashboard/*` routes — Via middleware ✅
+- [x] **2.4** 🔴 Protect all API routes with auth checks — Via middleware ✅
+- [x] **2.5** 🔴 Implement Demo Mode (read-only guest access) — ✅
+  - Created `/auth/signin` page with Demo button
+  - Created `/auth/error` page
+  - Demo users get read-only access (write operations blocked)
+  - DemoModeBanner shows indicator to visitors
 
 ### Security Headers
 
