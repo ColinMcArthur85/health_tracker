@@ -3,6 +3,7 @@ import db from '@/lib/db';
 import { Scale, TrendingDown, Calendar, Ruler } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
+import { StatCard } from '@/components/StatCards';
 
 export default async function MeasurementsPage() {
   const measurements = await db.measurement.findMany({
@@ -33,75 +34,71 @@ export default async function MeasurementsPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Body Measurements</h1>
-          <p className="text-slate-400">Track body circumferences and composition metrics</p>
+      <div className="max-w-7xl mx-auto space-y-12 pb-12 animate-fade-in">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-blue-300/80 uppercase tracking-widest">Biometrics</p>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+            Body Measurements
+          </h1>
+          <p className="text-text-secondary text-lg font-medium">Track body circumferences and composition metrics</p>
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Scale className="w-5 h-5 text-blue-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Current Weight</h3>
-            </div>
-            <p className="text-3xl font-bold">{latestWeight ? `${latestWeight} lbs` : '--'}</p>
-          </div>
-          
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Ruler className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Measurements</h3>
-            </div>
-            <p className="text-3xl font-bold">{totalMeasurements}</p>
-          </div>
-          
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <TrendingDown className="w-5 h-5 text-purple-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Trend</h3>
-            </div>
-            <p className="text-3xl font-bold">--</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StatCard 
+            icon={<Scale className="w-5 h-5 text-blue-300" />} 
+            label="Current Weight" 
+            value={latestWeight ? `${latestWeight} lbs` : '--'} 
+          />
+          <StatCard 
+            icon={<Ruler className="w-5 h-5 text-success" />} 
+            label="Measurements" 
+            value={totalMeasurements} 
+          />
+          <StatCard 
+            icon={<TrendingDown className="w-5 h-5 text-purple-400" />} 
+            label="Trend" 
+            value="--" 
+          />
         </div>
 
         {/* Measurements Table */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <div className="glass rounded-[32px] overflow-hidden border border-border-subtle shadow-xl shadow-black/10">
           {measurements.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Chest</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Waist</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Hips</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Arms</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Notes</th>
+                <thead>
+                  <tr className="bg-surface/50 border-b border-border-subtle">
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Date</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Chest</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Waist</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Hips</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Arms</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Notes</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-border-subtle/30">
                   {measurements.map((measurement) => (
-                    <tr key={measurement.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <tr key={measurement.id} className="hover:bg-surface/30 transition-all duration-200 group">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm font-bold text-text-primary group-hover:text-blue-300 transition-colors">
                         {measurement.dailyLog.date.toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                         {measurement.chest ? `${measurement.chest} cm` : '--'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                         {measurement.waist ? `${measurement.waist} cm` : '--'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                         {measurement.hips ? `${measurement.hips} cm` : '--'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                         {measurement.leftArm && measurement.rightArm 
                           ? `${measurement.leftArm}/${measurement.rightArm} cm` 
                           : '--'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-300">
+                      <td className="px-8 py-6 text-sm text-text-tertiary group-hover:text-text-secondary transition-colors max-w-xs truncate">
                         {measurement.notes || '--'}
                       </td>
                     </tr>
@@ -115,7 +112,7 @@ export default async function MeasurementsPage() {
               title="No measurements yet"
               description="Start tracking your body measurements to monitor progress and identify trends in your physical transformation journey."
               ActionComponent={
-                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-5 bg-white text-slate-950 rounded-2xl font-black hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-blue-500/10">
                   Log Your First Measurement
                 </Link>
               }
@@ -126,3 +123,4 @@ export default async function MeasurementsPage() {
     </DashboardLayout>
   );
 }
+

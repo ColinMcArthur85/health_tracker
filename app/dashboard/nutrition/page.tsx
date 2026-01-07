@@ -1,10 +1,10 @@
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import FilterBar from '@/components/dashboard/FilterBar';
-import MetricCard from '@/components/dashboard/MetricCard';
 import db from '@/lib/db';
 import { Apple, Beef, Wheat, Droplet } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
+import { MiniStatCard } from '@/components/StatCards';
 
 export default async function NutritionPage() {
   const nutritionLogs = await db.nutrition.findMany({
@@ -31,37 +31,37 @@ export default async function NutritionPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Nutrition</h1>
-          <p className="text-slate-400">Track your macros and calorie intake</p>
+      <div className="max-w-7xl mx-auto space-y-12 pb-12 animate-fade-in">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-success/80 uppercase tracking-widest">Internal Health</p>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+            Nutrition
+          </h1>
+          <p className="text-text-secondary text-lg font-medium">Track your macros and calorie intake</p>
         </div>
 
         {/* Macro Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MetricCard
-            title="Avg Calories"
+          <MiniStatCard
+            label="Avg Calories"
             value={avgCalories}
-            icon={<Apple className="w-5 h-5 text-white" />}
-            color="orange"
+            icon={<Apple className="w-5 h-5 text-warning" />}
           />
-          <MetricCard
-            title="Avg Protein"
+          <MiniStatCard
+            label="Avg Protein"
             value={`${avgProtein}g`}
-            icon={<Beef className="w-5 h-5 text-white" />}
-            color="blue"
+            icon={<Beef className="w-5 h-5 text-blue-300" />}
           />
-          <MetricCard
-            title="Avg Carbs"
+          <MiniStatCard
+            label="Avg Carbs"
             value={`${avgCarbs}g`}
-            icon={<Wheat className="w-5 h-5 text-white" />}
-            color="emerald"
+            icon={<Wheat className="w-5 h-5 text-success" />}
           />
-          <MetricCard
-            title="Avg Fat"
+          <MiniStatCard
+            label="Avg Fat"
             value={`${avgFat}g`}
-            icon={<Droplet className="w-5 h-5 text-white" />}
-            color="purple"
+            icon={<Droplet className="w-5 h-5 text-purple-400" />}
           />
         </div>
 
@@ -69,50 +69,50 @@ export default async function NutritionPage() {
         <FilterBar />
 
         {/* Nutrition Table */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <div className="glass rounded-[32px] overflow-hidden border border-border-subtle shadow-xl shadow-black/10">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <thead>
+                <tr className="bg-surface/50 border-b border-border-subtle">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Calories
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Protein
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Carbs
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Fat
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Fiber
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-border-subtle/30">
                 {nutritionLogs.map((nutrition) => (
-                  <tr key={nutrition.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <tr key={nutrition.id} className="hover:bg-surface/30 transition-all duration-200 group">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm font-bold text-text-primary group-hover:text-success transition-colors">
                       {nutrition.dailyLog.date.toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {nutrition.calories || '--'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {nutrition.protein ? `${nutrition.protein}g` : '--'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {nutrition.carbs ? `${nutrition.carbs}g` : '--'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {nutrition.fat ? `${nutrition.fat}g` : '--'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {nutrition.fiber ? `${nutrition.fiber}g` : '--'}
                     </td>
                   </tr>
@@ -127,7 +127,7 @@ export default async function NutritionPage() {
               title="No nutrition data yet"
               description="Start tracking your meals and macros to optimize your nutrition. Small daily adjustments lead to major long-term results."
               ActionComponent={
-                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-5 bg-white text-slate-950 rounded-2xl font-black hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-emerald-500/10">
                   Log Your First Meal
                 </Link>
               }
@@ -138,3 +138,4 @@ export default async function NutritionPage() {
     </DashboardLayout>
   );
 }
+

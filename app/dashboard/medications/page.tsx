@@ -3,9 +3,10 @@ import db from '@/lib/db';
 import { Pill, Calendar, CheckCircle } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
+import { StatCard } from '@/components/StatCards';
 
 export default async function MedicationsPage() {
-  const medications = await (db as any).medication.findMany({
+  const medications = await db.medication.findMany({
     include: {
       dailyLog: true,
     },
@@ -16,73 +17,71 @@ export default async function MedicationsPage() {
   });
 
   const totalMeds = medications.length;
- const takenCount = medications.filter((m: any) => m.taken).length;
+  const takenCount = medications.filter((m) => m.taken).length;
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Medications</h1>
-          <p className="text-slate-400">Track your medication adherence and dosages</p>
+      <div className="max-w-7xl mx-auto space-y-12 pb-12 animate-fade-in">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-success/80 uppercase tracking-widest">Medical</p>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+            Medications
+          </h1>
+          <p className="text-text-secondary text-lg font-medium">Track your medication adherence and dosages</p>
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Pill className="w-5 h-5 text-blue-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Total Logs</h3>
-            </div>
-            <p className="text-3xl font-bold">{totalMeds}</p>
-          </div>
-          
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Taken</h3>
-            </div>
-            <p className="text-3xl font-bold">{takenCount}</p>
-          </div>
-          
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Calendar className="w-5 h-5 text-purple-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Adherence</h3>
-            </div>
-            <p className="text-3xl font-bold">{totalMeds > 0 ? Math.round((takenCount / totalMeds) * 100) : 0}%</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StatCard 
+            icon={<Pill className="w-5 h-5 text-blue-300" />} 
+            label="Total Logs" 
+            value={totalMeds} 
+          />
+          <StatCard 
+            icon={<CheckCircle className="w-5 h-5 text-success" />} 
+            label="Taken" 
+            value={takenCount} 
+          />
+          <StatCard 
+            icon={<Calendar className="w-5 h-5 text-purple-400" />} 
+            label="Adherence" 
+            value={`${totalMeds > 0 ? Math.round((takenCount / totalMeds) * 100) : 0}%`} 
+          />
         </div>
 
         {/* Medications Table */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <div className="glass rounded-[32px] overflow-hidden border border-border-subtle shadow-xl shadow-black/10">
           {medications.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Medication</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Dosage</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Notes</th>
+                <thead>
+                  <tr className="bg-surface/50 border-b border-border-subtle">
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Date</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Medication</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Dosage</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Status</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Notes</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
-                  {medications.map((med: any) => (
-                    <tr key={med.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <tbody className="divide-y divide-border-subtle/30">
+                  {medications.map((med) => (
+                    <tr key={med.id} className="hover:bg-surface/30 transition-all duration-200 group">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm font-bold text-text-primary group-hover:text-success transition-colors">
                         {med.dailyLog.date.toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 text-sm">{med.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">{med.dosage || '--'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          med.taken ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                      <td className="px-8 py-6 text-sm text-text-primary transition-colors">{med.name}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">{med.dosage || '--'}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-sm">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          med.taken ? 'bg-emerald-500/10 text-success border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
                         }`}>
                           {med.taken ? 'Taken' : 'Skipped'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-300">{med.notes || '--'}</td>
+                      <td className="px-8 py-6 text-sm text-text-tertiary group-hover:text-text-secondary transition-colors max-w-xs truncate">
+                        {med.notes || '--'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -94,7 +93,7 @@ export default async function MedicationsPage() {
               title="No medications logged yet"
               description="Track your medication adherence to ensure consistent treatment and better health outcomes."
               ActionComponent={
-                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-5 bg-white text-slate-950 rounded-2xl font-black hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-emerald-500/10">
                   Log Your First Medication
                 </Link>
               }
@@ -105,3 +104,4 @@ export default async function MedicationsPage() {
     </DashboardLayout>
   );
 }
+

@@ -37,7 +37,7 @@ export default async function BodyPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h1 className="text-4xl font-extrabold tracking-tight text-white mb-2">Body Metrics</h1>
-            <p className="text-slate-400 text-lg font-medium">Comprehensive tracking of your physical evolution.</p>
+            <p className="text-text-secondary text-lg font-medium">Comprehensive tracking of your physical evolution.</p>
           </div>
         </div>
 
@@ -77,13 +77,13 @@ export default async function BodyPage() {
             <table className="w-full">
               <thead className="bg-slate-800/50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Weight
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Change
                   </th>
                 </tr>
@@ -103,7 +103,7 @@ export default async function BodyPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {change ? (
-                          <span className={parseFloat(change) < 0 ? 'text-emerald-400' : 'text-red-400'}>
+                          <span className={parseFloat(change) < 0 ? 'text-success' : 'text-red-400'}>
                             {parseFloat(change) > 0 ? '+' : ''}{change} lbs
                           </span>
                         ) : '--'}
@@ -116,7 +116,7 @@ export default async function BodyPage() {
           </div>
           
           {checkIns.length === 0 && (
-            <div className="text-center py-12 text-slate-400">
+            <div className="text-center py-12 text-text-secondary">
               <Scale className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>No weight data logged yet</p>
             </div>
@@ -131,11 +131,11 @@ export default async function BodyPage() {
               <table className="w-full">
                 <thead className="bg-slate-800/50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Chest</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Waist</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Hips</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Arms</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Chest</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Waist</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Hips</th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">Arms</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800">

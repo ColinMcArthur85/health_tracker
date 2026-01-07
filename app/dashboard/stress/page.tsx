@@ -30,23 +30,23 @@ export default async function StressPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold mb-2">Stress & Mind Health</h1>
-          <p className="text-slate-400">Track emotional state and identify stress patterns</p>
+          <p className="text-text-secondary">Track emotional state and identify stress patterns</p>
         </div>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
             <div className="flex items-center space-x-3 mb-2">
-              <Activity className="w-5 h-5 text-blue-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Total Check-Ins</h3>
+              <Activity className="w-5 h-5 text-blue-300" />
+              <h3 className="text-text-secondary text-sm font-medium uppercase">Total Check-Ins</h3>
             </div>
             <p className="text-3xl font-bold">{reflections.length}</p>
           </div>
           
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
             <div className="flex items-center space-x-3 mb-2">
-              <Brain className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Recent Mood</h3>
+              <Brain className="w-5 h-5 text-success" />
+              <h3 className="text-text-secondary text-sm font-medium uppercase">Recent Mood</h3>
             </div>
             <p className="text-3xl font-bold">{reflections[0]?.mood || '--'}</p>
           </div>
@@ -54,7 +54,7 @@ export default async function StressPage() {
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
             <div className="flex items-center space-x-3 mb-2">
               <Calendar className="w-5 h-5 text-purple-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Streak</h3>
+              <h3 className="text-text-secondary text-sm font-medium uppercase">Streak</h3>
             </div>
             <p className="text-3xl font-bold">--</p>
           </div>
@@ -67,19 +67,19 @@ export default async function StressPage() {
               <table className="w-full">
                 <thead className="bg-slate-800/50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       Mood
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       Energy
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       Confidence
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                       Notes
                     </th>
                   </tr>
@@ -91,7 +91,7 @@ export default async function StressPage() {
                         {reflection.dailyLog.date.toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs">
+                        <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
                           {reflection.mood || '--'}
                         </span>
                       </td>

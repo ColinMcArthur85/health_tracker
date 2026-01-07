@@ -18,12 +18,12 @@ export default function EmptyState({
   ActionComponent,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 px-4">
-      <div className="p-10 rounded-full bg-slate-900 mb-6 border border-slate-800 shadow-2xl">
-        <Icon className="w-16 h-16 text-slate-700" />
+    <div className="flex flex-col items-center justify-center py-24 px-8">
+      <div className="p-12 rounded-[40px] bg-background-raised mb-8 border border-border-subtle shadow-inner">
+        <Icon className="w-20 h-20 text-text-secondary opacity-40" />
       </div>
-      <h3 className="text-3xl font-extrabold text-white mb-3 text-center">{title}</h3>
-      <p className="text-slate-500 mb-10 max-w-md text-center text-lg font-medium leading-relaxed">
+      <h3 className="text-4xl font-black text-text-primary mb-4 text-center tracking-tight">{title}</h3>
+      <p className="text-text-secondary mb-12 max-w-lg text-center text-lg font-medium leading-relaxed">
         {description}
       </p>
       {ActionComponent ? (
@@ -31,7 +31,7 @@ export default function EmptyState({
       ) : actionLabel && onAction ? (
         <button
           onClick={onAction}
-          className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5"
+          className="px-12 py-5 bg-white text-slate-950 rounded-2xl font-black hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-white/10"
         >
           {actionLabel}
         </button>
@@ -39,3 +39,4 @@ export default function EmptyState({
     </div>
   );
 }
+

@@ -10,7 +10,7 @@ export default async function SearchPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold mb-2">Search</h1>
-          <p className="text-slate-400">Search across all your health data</p>
+          <p className="text-text-secondary">Search across all your health data</p>
         </div>
 
         <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">

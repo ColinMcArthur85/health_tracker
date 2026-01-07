@@ -1,10 +1,10 @@
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import FilterBar from '@/components/dashboard/FilterBar';
-import MetricCard from '@/components/dashboard/MetricCard';
 import db from '@/lib/db';
 import { Heart, Smile, Zap, Pill } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
+import { MiniStatCard } from '@/components/StatCards';
 
 export default async function WellnessPage() {
   const reflections = await db.reflection.findMany({
@@ -27,7 +27,7 @@ export default async function WellnessPage() {
     take: 30,
   });
 
-  const medications = await (db as any).medication.findMany({
+  const medications = await db.medication.findMany({
     include: {
       dailyLog: true,
     },
@@ -39,37 +39,37 @@ export default async function WellnessPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Mood Tracker</h1>
-          <p className="text-slate-400">Track emotional state, energy levels, and mental clarity</p>
+      <div className="max-w-7xl mx-auto space-y-12 pb-12 animate-fade-in">
+        {/* Header Section */}
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-red-300/80 uppercase tracking-widest">Internal State</p>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+            Mood Tracker
+          </h1>
+          <p className="text-text-secondary text-lg font-medium">Track emotional state, energy levels, and mental clarity</p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <MetricCard
-            title="Mood Logs"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <MiniStatCard
+            label="Mood Logs"
             value={reflections.filter(r => r.mood).length}
-            icon={<Smile className="w-5 h-5 text-white" />}
-            color="pink"
+            icon={<Smile className="w-5 h-5 text-red-300" />}
           />
-          <MetricCard
-            title="Energy Logs"
+          <MiniStatCard
+            label="Energy Logs"
             value={reflections.filter(r => r.energy).length}
-            icon={<Zap className="w-5 h-5 text-white" />}
-            color="orange"
+            icon={<Zap className="w-5 h-5 text-warning" />}
           />
-          <MetricCard
-            title="Supplements"
+          <MiniStatCard
+            label="Supplements"
             value={checkIns.filter(c => c.supplements).length}
-            icon={<Pill className="w-5 h-5 text-white" />}
-            color="emerald"
+            icon={<Pill className="w-5 h-5 text-success" />}
           />
-          <MetricCard
-            title="Medications"
+          <MiniStatCard
+            label="Medications"
             value={medications.length}
-            icon={<Heart className="w-5 h-5 text-white" />}
-            color="blue"
+            icon={<Heart className="w-5 h-5 text-blue-300" />}
           />
         </div>
 
@@ -77,29 +77,31 @@ export default async function WellnessPage() {
         <FilterBar />
 
         {/* Mood & Energy */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-          <h2 className="text-xl font-semibold mb-4">Mood & Energy Tracking</h2>
+        <div className="glass rounded-[32px] overflow-hidden border border-border-subtle shadow-xl shadow-black/10">
+          <div className="bg-surface/50 px-8 py-6 border-b border-border-subtle">
+            <h2 className="text-xl font-bold text-text-primary">Mood & Energy Tracking</h2>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Mood</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Energy</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Confidence</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Notes</th>
+              <thead>
+                <tr className="bg-surface/30 border-b border-border-subtle">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Date</th>
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Mood</th>
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Energy</th>
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Confidence</th>
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-border-subtle/30">
                 {reflections.map((reflection) => (
-                  <tr key={reflection.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <tr key={reflection.id} className="hover:bg-surface/30 transition-all duration-200 group">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm font-bold text-text-primary group-hover:text-red-300 transition-colors">
                       {reflection.dailyLog.date.toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">{reflection.mood || '--'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">{reflection.energy || '--'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">{reflection.confidence || '--'}</td>
-                    <td className="px-6 py-4 text-sm text-slate-300 max-w-xs truncate">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">{reflection.mood || '--'}</td>
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">{reflection.energy || '--'}</td>
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">{reflection.confidence || '--'}</td>
+                    <td className="px-8 py-6 text-sm text-text-tertiary group-hover:text-text-secondary transition-colors max-w-xs truncate">
                       {reflection.notes || '--'}
                     </td>
                   </tr>
@@ -114,7 +116,7 @@ export default async function WellnessPage() {
               title="No mood data yet"
               description="Track your emotional patterns, energy levels, and mental clarity. Understanding your mood cycles helps optimize your daily routines."
               ActionComponent={
-                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-4 bg-white text-slate-950 rounded-2xl font-bold hover:bg-slate-200 transition-all hover:scale-105 shadow-xl shadow-white/5">
+                <Link href={`/dashboard/journal/${new Date().toISOString().split('T')[0]}`} className="px-12 py-5 bg-white text-slate-950 rounded-2xl font-black hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-pink-500/10">
                   Log Your First Mood
                 </Link>
               }
@@ -124,35 +126,39 @@ export default async function WellnessPage() {
 
         {/* Medications */}
         {medications.length > 0 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <h2 className="text-xl font-semibold mb-4">Medications</h2>
+          <div className="glass rounded-[32px] overflow-hidden border border-border-subtle shadow-xl shadow-black/10">
+            <div className="bg-surface/50 px-8 py-6 border-b border-border-subtle">
+              <h2 className="text-xl font-bold text-text-primary">Medications</h2>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Medication</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Dosage</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Taken</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Notes</th>
+                <thead>
+                  <tr className="bg-surface/30 border-b border-border-subtle">
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Date</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Medication</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Dosage</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Taken</th>
+                    <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">Notes</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
-                  {medications.map((med: typeof medications[0]) => (
-                    <tr key={med.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <tbody className="divide-y divide-border-subtle/30">
+                  {medications.map((med) => (
+                    <tr key={med.id} className="hover:bg-surface/30 transition-all duration-200 group">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm font-bold text-text-primary group-hover:text-blue-300 transition-colors">
                         {med.dailyLog.date.toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">{med.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">{med.dosage || '--'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          med.taken ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">{med.name}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">{med.dosage || '--'}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-sm">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          med.taken ? 'bg-emerald-500/10 text-success border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
                         }`}>
                           {med.taken ? 'Yes' : 'No'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-300">{med.notes || '--'}</td>
+                      <td className="px-8 py-6 text-sm text-text-tertiary group-hover:text-text-secondary transition-colors max-w-xs truncate">
+                        {med.notes || '--'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -164,3 +170,4 @@ export default async function WellnessPage() {
     </DashboardLayout>
   );
 }
+

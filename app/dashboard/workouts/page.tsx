@@ -6,6 +6,8 @@ import { Dumbbell, Clock, Flame } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
 
+import { StatCard } from '@/components/StatCards';
+
 export default async function WorkoutsPage() {
   const workouts = await db.workout.findMany({
     include: {
@@ -22,49 +24,47 @@ export default async function WorkoutsPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Workouts</h1>
-          <p className="text-slate-400">Track and analyze your training sessions</p>
+      <div className="max-w-7xl mx-auto space-y-12 pb-12 animate-fade-in">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2">
+            <p className="text-sm font-bold text-success uppercase tracking-widest">Physical Activity</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gradient">
+              Workouts
+            </h1>
+            <p className="text-text-secondary text-lg font-medium">Track and analyze your training sessions</p>
+          </div>
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Dumbbell className="w-5 h-5 text-blue-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Total Workouts</h3>
-            </div>
-            <p className="text-3xl font-bold">{totalWorkouts}</p>
-          </div>
-          
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Clock className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Total Time</h3>
-            </div>
-            <p className="text-3xl font-bold">{Math.round(totalMinutes / 60)}h</p>
-          </div>
-          
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <Flame className="w-5 h-5 text-orange-400" />
-              <h3 className="text-slate-400 text-sm font-medium uppercase">Avg Duration</h3>
-            </div>
-            <p className="text-3xl font-bold">{avgDuration}min</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StatCard 
+            icon={<Dumbbell className="w-5 h-5 text-blue-300" />} 
+            label="Total Workouts" 
+            value={totalWorkouts} 
+          />
+          <StatCard 
+            icon={<Clock className="w-5 h-5 text-success" />} 
+            label="Total Time" 
+            value={`${Math.round(totalMinutes / 60)}h`} 
+          />
+          <StatCard 
+            icon={<Flame className="w-5 h-5 text-warning" />} 
+            label="Avg Duration" 
+            value={`${avgDuration}m`} 
+          />
         </div>
 
         {/* Filters */}
         <FilterBar>
-          <select className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+          <select className="bg-background-raised border border-border-subtle rounded-xl px-4 py-2 text-sm text-text-secondary focus:outline-none focus:border-emerald-500/50 transition-all">
             <option>All Types</option>
             <option>Strength</option>
             <option>Cardio</option>
             <option>Mobility</option>
           </select>
           
-          <select className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+          <select className="bg-background-raised border border-border-subtle rounded-xl px-4 py-2 text-sm text-text-secondary focus:outline-none focus:border-emerald-500/50 transition-all">
             <option>All Intensity</option>
             <option>Low</option>
             <option>Moderate</option>
@@ -73,64 +73,64 @@ export default async function WorkoutsPage() {
         </FilterBar>
 
         {/* Workouts List */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <div className="glass rounded-[32px] overflow-hidden border border-border-subtle">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+              <thead>
+                <tr className="bg-surface/50 border-b border-border-subtle">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Workout
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Type
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Duration
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Intensity
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  <th className="px-8 py-5 text-left text-xs font-bold text-text-tertiary uppercase tracking-widest">
                     Instructor
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-border-subtle/30">
                 {workouts.map((workout) => (
-                  <tr key={workout.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <tr key={workout.id} className="hover:bg-surface/30 transition-all duration-200 group">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {formatUTCDateLong(workout.dailyLog.date)}
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium">
+                    <td className="px-8 py-6 text-sm font-bold text-text-primary group-hover:text-success transition-colors">
                       {workout.name || 'Untitled Workout'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        workout.type === 'Strength' ? 'bg-blue-500/20 text-blue-400' :
-                        workout.type === 'Cardio' ? 'bg-orange-500/20 text-orange-400' :
-                        workout.type === 'Mobility' ? 'bg-emerald-500/20 text-emerald-400' :
-                        'bg-slate-500/20 text-slate-400'
+                    <td className="px-8 py-6 whitespace-nowrap text-sm">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                        workout.type === 'Strength' ? 'bg-blue-500/10 text-blue-300 border border-blue-500/30' :
+                        workout.type === 'Cardio' ? 'bg-orange-500/10 text-orange-300 border border-orange-500/30' :
+                        workout.type === 'Mobility' ? 'bg-emerald-500/10 text-success border border-emerald-500/30' :
+                        'bg-surface-interactive text-text-secondary border border-border-strong'
                       }`}>
                         {workout.type || 'N/A'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-text-secondary">
                       {workout.duration ? `${workout.duration} min` : '--'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        workout.intensity === 'High' ? 'bg-red-500/20 text-red-400' :
-                        workout.intensity === 'Moderate' ? 'bg-yellow-500/20 text-yellow-400' :
-                        workout.intensity === 'Low' ? 'bg-green-500/20 text-green-400' :
-                        'bg-slate-500/20 text-slate-400'
+                    <td className="px-8 py-6 whitespace-nowrap text-sm">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                        workout.intensity === 'High' ? 'bg-red-500/15 text-red-300 border border-red-400/30' :
+                        workout.intensity === 'Moderate' ? 'bg-yellow-500/15 text-warning border border-yellow-400/30' :
+                        workout.intensity === 'Low' ? 'bg-green-500/15 text-success border border-green-400/30' :
+                        'bg-surface-interactive text-text-secondary border border-border-strong'
                       }`}>
                         {workout.intensity || 'N/A'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-300">
+                    <td className="px-8 py-6 text-sm text-text-tertiary font-medium">
                       {workout.instructor || '--'}
                     </td>
                   </tr>
