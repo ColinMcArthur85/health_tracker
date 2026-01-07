@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import OpenAI from 'openai';
+import { rateLimiters, applyRateLimit } from '@/lib/rateLimit';
 
 // Initialize inside handler or use a getter to prevent build-time errors
 const getOpenAI = () => {
@@ -12,6 +13,10 @@ const getOpenAI = () => {
 };
 
 export async function POST(req: Request) {
+  // Apply rate limiting (10 requests per minute)
+  const rateLimitResponse = applyRateLimit(req, rateLimiters.photoAnalysis);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { dailyLogId } = await req.json();
 
