@@ -3,6 +3,8 @@
  * Runs before each test file
  */
 import '@testing-library/jest-dom';
+// React is used implicitly by JSX in some mocks, but if lint complains about unused import, we can remove it
+// if it's already available globally or imported inside mock factories.
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({

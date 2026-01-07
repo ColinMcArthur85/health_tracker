@@ -2,9 +2,14 @@ import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize inside handler or use a getter to prevent build-time errors
+const getOpenAI = () => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not defined');
+  }
+  return new OpenAI({ apiKey });
+};
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +27,7 @@ export async function POST(req: Request) {
     const imageUrls = photos.map(p => p.url);
     
     // Prepare the message for OpenAI
+    const openai = getOpenAI();
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [

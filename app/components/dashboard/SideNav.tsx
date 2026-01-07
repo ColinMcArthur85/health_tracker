@@ -75,12 +75,16 @@ export default function SideNav() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-16 bottom-0 w-64 bg-slate-900 border-r border-slate-800 overflow-y-auto">
+    <aside className="fixed left-0 top-16 bottom-0 w-64 
+                      bg-(--color-background-raised)/80 
+                      backdrop-blur-md
+                      border-r border-border-subtle 
+                      overflow-y-auto">
       <nav className="p-4 space-y-6">
         {navSections.map((section, sectionIdx) => (
           <div key={sectionIdx}>
             {section.title && (
-              <h3 className="px-4 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <h3 className="px-4 mb-3 text-[10px] font-semibold text-(--color-text-tertiary) uppercase tracking-widest">
                 {section.title}
               </h3>
             )}
@@ -94,14 +98,14 @@ export default function SideNav() {
                     key={item.href}
                     href={item.href}
                     className={`
-                      flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all
+                      flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
                       ${isActive 
-                        ? 'bg-linear-to-r from-blue-600 to-emerald-600 text-white shadow-lg shadow-blue-500/20' 
-                        : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
+                        ? 'bg-linear-to-r from-emerald-500/20 to-emerald-600/10 text-emerald-400 border border-emerald-500/30 shadow-(--shadow-glow-primary)' 
+                        : 'text-(--color-text-secondary) hover:bg-surface hover:text-(--color-text-primary)'
                       }
                     `}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : ''}`} />
                     <span className="text-sm font-medium">{item.label}</span>
                   </Link>
                 );

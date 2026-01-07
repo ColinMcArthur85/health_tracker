@@ -128,7 +128,8 @@ export default function PhotosPage() {
                             <Image 
                               src={photo.url} 
                               alt={`${viewType} view`} 
-                              fill 
+                              fill
+                              sizes="(max-width: 768px) 100vw, 33vw"
                               className="object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                             <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/60 rounded text-[10px] font-bold text-white uppercase tracking-wider">

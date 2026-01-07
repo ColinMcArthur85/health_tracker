@@ -60,7 +60,7 @@ export const authConfig: NextAuthConfig = {
           return null;
         }
         
-        if (credentials?.password === ownerPassword) {
+        if ((credentials as any)?.password === ownerPassword) {
           return OWNER_USER;
         }
         

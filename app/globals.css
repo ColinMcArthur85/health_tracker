@@ -1,26 +1,736 @@
+/**
+ * Health Journal - Antigravity Design System
+ * Based on Eric Kennedy's design principles
+ * 
+ * Design Philosophy:
+ * - Distinctly human-made, never AI-looking
+ * - Premium, health-focused aesthetic
+ * - Brand: Precise, Personal, Progress
+ */
+
 @import "tailwindcss";
 
+/* ========================================
+   DESIGN TOKENS
+   ======================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --------------------------------
+     Color System: Brand-Saturated Grays
+     Teal-blue tint for health/wellness
+     -------------------------------- */
+  
+  /* Background Scale (Deep to Surface) */
+  --color-background: #060b10;          /* Deepest background */
+  --color-background-raised: #0a1018;   /* Slightly elevated */
+  --color-surface: #0f1720;             /* Cards, panels */
+  --color-surface-elevated: #151f2a;    /* Modals, dropdowns */
+  --color-surface-interactive: #1a2736; /* Hover states */
+  
+  /* Border Scale */
+  --color-border-subtle: #1a2736;       /* Subtle dividers */
+  --color-border: #243040;              /* Default borders */
+  --color-border-strong: #2e3e50;       /* Emphasized borders */
+  
+  /* Text Scale */
+  --color-text-primary: #f0f6fc;        /* Primary text - slightly cool white */
+  --color-text-secondary: #8b9cb3;      /* Secondary text */
+  --color-text-tertiary: #5c6c7f;       /* Muted text */
+  --color-text-inverse: #0a1018;        /* Text on light backgrounds */
+  
+  /* --------------------------------
+     Primary Palette: Wellness Emerald
+     -------------------------------- */
+  --primary-50: #ecfdf5;
+  --primary-100: #d1fae5;
+  --primary-200: #a7f3d0;
+  --primary-300: #6ee7b7;
+  --primary-400: #34d399;
+  --primary-500: #10b981;   /* Main brand */
+  --primary-600: #059669;
+  --primary-700: #047857;
+  --primary-800: #065f46;
+  --primary-900: #064e3b;
+  --primary-950: #022c22;
+  
+  /* --------------------------------
+     Accent Palette: Energy Orange
+     -------------------------------- */
+  --accent-400: #fb923c;
+  --accent-500: #f97316;
+  --accent-600: #ea580c;
+  
+  /* --------------------------------
+     Semantic Colors
+     -------------------------------- */
+  --color-success: #22c55e;
+  --color-success-muted: rgba(34, 197, 94, 0.15);
+  --color-warning: #eab308;
+  --color-warning-muted: rgba(234, 179, 8, 0.15);
+  --color-error: #ef4444;
+  --color-error-muted: rgba(239, 68, 68, 0.15);
+  --color-info: #3b82f6;
+  --color-info-muted: rgba(59, 130, 246, 0.15);
+  
+  /* --------------------------------
+     Shadow System
+     Light source: Top-left
+     -------------------------------- */
+  
+  /* Elevation shadows (deeper = more elevated) */
+  --shadow-xs: 
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 1px rgba(0, 0, 0, 0.06);
+  
+  --shadow-sm: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.15);
+  
+  --shadow-md: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  
+  --shadow-lg: 
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+  
+  --shadow-xl: 
+    0 16px 32px rgba(0, 0, 0, 0.5),
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+  
+  --shadow-2xl: 
+    0 24px 48px rgba(0, 0, 0, 0.6),
+    0 12px 24px rgba(0, 0, 0, 0.3);
+  
+  /* Glow effects for interactive elements */
+  --shadow-glow-primary: 
+    0 0 20px rgba(16, 185, 129, 0.25),
+    0 0 40px rgba(16, 185, 129, 0.1);
+  
+  --shadow-glow-accent: 
+    0 0 20px rgba(249, 115, 22, 0.25),
+    0 0 40px rgba(249, 115, 22, 0.1);
+  
+  --shadow-glow-white: 
+    0 0 30px rgba(240, 246, 252, 0.15),
+    0 0 60px rgba(240, 246, 252, 0.05);
+  
+  /* Inner shadow for pressed states */
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  
+  /* --------------------------------
+     Typography
+     -------------------------------- */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* Type scale */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.875rem;   /* 30px */
+  --text-4xl: 2.25rem;    /* 36px */
+  --text-5xl: 3rem;       /* 48px */
+  
+  /* --------------------------------
+     Spacing & Layout
+     -------------------------------- */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.25rem;  /* 20px */
+  --radius-3xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+  
+  /* --------------------------------
+     Animation & Transitions
+     -------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+  
+  /* Legacy compatibility */
+  --background: var(--color-background);
+  --foreground: var(--color-text-primary);
 }
+
+/* ========================================
+   THEME INTEGRATION WITH TAILWIND
+   ======================================== */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+  
+  /* Custom colors for Tailwind */
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-border-subtle: var(--color-border-subtle);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  
+  /* Subtle gradient for depth */
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(59, 130, 246, 0.04), transparent);
+}
+
+/* ========================================
+   COMPONENT PATTERNS
+   ======================================== */
+
+/* Card Pattern */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-normal) var(--ease-out-expo);
+}
+
+.card:hover {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Elevated Card */
+.card-elevated {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(15, 23, 32, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ========================================
+   BUTTON PATTERNS
+   ======================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  box-shadow: 
+    var(--shadow-md),
+    0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+  box-shadow: 
+    var(--shadow-lg),
+    var(--shadow-glow-primary);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-interactive);
+  border-color: var(--color-border-strong);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+/* White CTA Button */
+.btn-white {
+  background: var(--color-text-primary);
+  color: var(--color-text-inverse);
+  font-weight: 700;
+  box-shadow: var(--shadow-lg), var(--shadow-glow-white);
+}
+
+.btn-white:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl), var(--shadow-glow-white);
+}
+
+/* ========================================
+   INPUT PATTERNS
+   ======================================== */
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--color-background-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.input:hover:not(:focus) {
+  border-color: var(--color-border);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out-expo);
+}
+
+.animate-slide-up {
+  animation: slideUp var(--duration-slow) var(--ease-out-expo);
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--duration-normal) var(--ease-out-expo);
+}
+
+/* ========================================
+   UTILITY PATTERNS
+   ======================================== */
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-text-primary), var(--color-text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--primary-300), var(--primary-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle backdrop */
+.backdrop-blur-subtle {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Focus ring */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--primary-500);
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 0%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-raised);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* ========================================
+   SELECTION STYLING
+   ======================================== */
+
+::selection {
+  background: rgba(16, 185, 129, 0.3);
+  color: var(--color-text-primary);
+}
+
+::-moz-selection {
+  background: rgba(16, 185, 129, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* ========================================
+   VISUAL MOTIFS
+   ======================================== */
+
+/* Dot Grid Pattern */
+.dot-grid {
+  background-image: radial-gradient(
+    circle at center,
+    var(--color-border-subtle) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.dot-grid-lg {
+  background-image: radial-gradient(
+    circle at center,
+    var(--color-border-subtle) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 40px 40px;
+}
+
+/* Subtle noise texture overlay */
+.texture-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Gradient Orb Background Decorations */
+.orb-glow {
+  position: relative;
+}
+
+.orb-glow::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb-glow::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 40%;
+  height: 40%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========================================
+   SECTION & LAYOUT UTILITIES
+   ======================================== */
+
+/* Section with generous whitespace */
+.section {
+  padding: 3rem 0;
+}
+
+.section-lg {
+  padding: 4rem 0;
+}
+
+.section-xl {
+  padding: 6rem 0;
+}
+
+/* Page container with max width and padding */
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-container {
+    padding: 0 3rem;
+  }
+}
+
+/* Content area with readable line length */
+.prose-container {
+  max-width: 65ch;
+}
+
+/* Stack with consistent spacing */
+.stack-sm > * + * {
+  margin-top: 0.75rem;
+}
+
+.stack > * + * {
+  margin-top: 1.5rem;
+}
+
+.stack-lg > * + * {
+  margin-top: 2.5rem;
+}
+
+.stack-xl > * + * {
+  margin-top: 4rem;
+}
+
+/* Grid with consistent gap */
+.grid-auto {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-auto-lg {
+  display: grid;
+  gap: 2rem;
+}
+
+/* ========================================
+   DECORATIVE ELEMENTS
+   ======================================== */
+
+/* Subtle separator line */
+.separator {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-border-subtle) 20%,
+    var(--color-border-subtle) 80%,
+    transparent
+  );
+}
+
+/* Glowing separator */
+.separator-glow {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary-500) 50%,
+    transparent
+  );
+  opacity: 0.3;
+}
+
+/* Badge styling */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.badge-primary {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary-400);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge-warning {
+  background: rgba(234, 179, 8, 0.15);
+  color: #fbbf24;
+  border-color: rgba(234, 179, 8, 0.3);
+}
+
+.badge-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 6px;
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-400));
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out-expo);
+}
+
+/* Tooltip styling */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  z-index: 100;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }

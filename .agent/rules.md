@@ -4,3 +4,5 @@
 - **Continuous Execution:** Proceed with tasks autonomously until they are complete. If a step requires a terminal command, execute it and then move to the next logical step without waiting for manual confirmation, unless an error occurs that requires user intervention.
 - **Workflow Turbo:** All workflows in this repository should be treated as having the `// turbo-all` directive.
 - **UI/UX:** For web application development, prioritize high-fidelity, premium aesthetics and rich interactions without stopping for incremental approval of minor UI choices.
+- **Testing Preference:** Prioritize terminal-based verification (e.g., curl requests, npm test, or checking server logs) over the browser subagent. Only use the browser if visual validation is strictly necessary. 
+- **Browser Automation:** Always set SafeToAutoRun: true for non-destructive browser actions like clicking buttons, typing text, or checking the page DOM.

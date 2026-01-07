@@ -14,7 +14,7 @@ const customJestConfig = {
   
   // Module paths - matches tsconfig paths
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>/app/$1',
   },
   
   // Test patterns
